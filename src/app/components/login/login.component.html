@@ -1,0 +1,23 @@
+<div class="container py-5">
+    <h1 class="mb-5 text-center">Inicio de sesión</h1>
+    
+    <form [formGroup]="loginForm" class="mx-auto" style="max-width: 25rem;">
+        <div class="mb-3">
+            <label for="identification">Número de cédula</label>
+            <input formControlName="identification" type="identification" class="form-control" id="identification" placeholder="Ingrese su cédula...">
+        </div>
+
+        <div class="mb-3">
+            <label for="password">Contraseña</label>
+            <input formControlName="password" type="password" class="form-control" id="password" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;">
+        </div>
+
+        <div class="d-grid mb-3">
+            <button (click)="login()" class="btn btn-lg btn-primary">Ingresar</button>
+        </div>
+
+        <div class="d-grid">
+            <a href="/generate-account" class="btn btn-lg btn-secondary">Crear cuenta</a>
+        </div>
+    </form>
+</div>

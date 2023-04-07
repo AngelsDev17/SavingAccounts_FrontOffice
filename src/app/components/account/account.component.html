@@ -1,0 +1,95 @@
+<div class="container mt-5">
+    <h3 class="mb-3">Saving Accounts</h3>
+
+    <div class="card text-center">
+        <div class="card-header">
+            Bienvenido {{ name }}
+        </div>
+        <div class="card-body">
+            <h5 class="card-title mb-3">El saldo actual de la cuenta es: {{ amount | currency }}</h5>
+            <a href="#" class="btn btn-primary me-2" style="width: 120px;" data-bs-toggle="modal" data-bs-target="#accountModal" (click)="openSendMoneyModal()">Consignar</a>
+            <a href="#" class="btn btn-warning ms-2" style="width: 120px;" data-bs-toggle="modal" data-bs-target="#accountModal" (click)="openWithdrawMoneyModal()">Retirar</a>
+        </div>
+        <div class="card-footer text-muted">
+            Número de cuenta: {{ account }} - <a class="logout" (click)="logout()">Cerrar Sesión</a>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5" *ngIf="history">
+    <table class="mt-5 table table-hover">
+        <thead>
+            <tr>
+                <th>Cuenta de transacción</th>
+                <th>Destino</th>
+                <th>Monto</th>
+                <th>Fecha</th>
+                <th>Tipo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let transaction of history">
+                <th>{{ transaction.type.toString() == "ReceiveMoney" ? transaction.destination : transaction.account }}</th>
+                <th>{{ transaction.type.toString() == "ReceiveMoney" ? transaction.account : transaction.destination }}</th>
+                <th>{{ transaction.amount | currency }}</th>
+                <th>{{ transaction.date | date:"dd/MM/yyyy - HH:mm:ss" }}</th>
+
+                <th *ngIf="transaction.type.toString() == 'SendMoney'">
+                    <span class="badge rounded-pill bg-primary">
+                        Consignación
+                    </span>
+                </th>
+
+                <th *ngIf="transaction.type.toString() == 'ReceiveMoney'">
+                    <span class="badge rounded-pill bg-success">
+                        Recepción
+                    </span>
+                </th>
+
+                <th *ngIf="transaction.type.toString() == 'WithdrawMoney'">
+                    <span class="badge rounded-pill bg-danger">
+                        Retiro
+                    </span>
+                </th>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="accountModal" tabindex="-1" aria-labelledby="accountModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">{{ isSendMoney ? "Consignar" : "Retirar" }} dinero</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="accountForm">
+                    <div *ngIf="isSendMoney" class="mb-2 row">
+                        <label for="account" class="col-sm-12 col-form-label">Número de cuenta</label>
+
+                        <div class="col-sm-12">
+                            <input formControlName="account" type="text" class="form-control" id="account" name="account">
+                        </div>
+                    </div>
+
+                    <div class="mb-2 row">
+                        <label for="amount" class="col-form-label">Valor para {{ isSendMoney ? "Consignar" : "Retirar" }}</label>
+
+                        <div class="col-sm-12">
+                            <input formControlName="amount" type="number" class="form-control" id="amount" name="amount">
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+
+                <button *ngIf="isSendMoney" type="button" class="btn btn-success" data-bs-dismiss="modal" (click)="sendMoney()">Consignar</button>
+                <button *ngIf="!isSendMoney" type="button" class="btn btn-success" data-bs-dismiss="modal" (click)="withdrawMoney()">Retirar</button>
+            </div>
+        </div>
+    </div>
+</div>
